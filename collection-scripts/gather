@@ -15,6 +15,7 @@ resources+=(machinehealthchecks)
 resources+=(poisonpillremediations)
 resources+=(poisonpillremediationtemplates)
 resources+=(poisonpillconfigs)
+resources+=(nodehealthchecks)
 
 # Run the collection of resources using must-gather
 for resource in "${resources[@]}"; do
