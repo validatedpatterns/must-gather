@@ -2,6 +2,10 @@
 
 aliases:
   approvers:
-      - n1r1
+      - slintes
+      - mshitrit
+      - beekhof
   code-reviewers:
-      - n1r1
+      - slintes
+      - mshitrit
+      - beekhof
