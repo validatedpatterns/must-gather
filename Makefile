@@ -1,10 +1,8 @@
-IMAGE_REGISTRY ?= quay.io
+IMAGE_REGISTRY ?= quay.io/medik8s
+IMAGE_NAME ?= must-gather
 IMAGE_TAG ?= latest
 
-# MUST_GATHER_IMAGE needs to be passed explicitly 
-ifndef MUST_GATHER_IMAGE
-$(error MUST_GATHER_IMAGE is not set.)
-endif
+IMAGE ?= ${IMAGE_REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}
 
 build: docker-build docker-push
 
@@ -13,9 +11,9 @@ check:
 	shellcheck collection-scripts/*
 
 docker-build:
-	docker build -t ${IMAGE_REGISTRY}/${MUST_GATHER_IMAGE}:${IMAGE_TAG} .
+	docker build -t ${IMAGE} .
 
 docker-push:
-	docker push ${IMAGE_REGISTRY}/${MUST_GATHER_IMAGE}:${IMAGE_TAG}
+	docker push ${IMAGE}
 
 .PHONY: build docker-build docker-push
