@@ -2,15 +2,15 @@ Medik8s must-gather
 =================
 
 `must-gather` is a tool built on top of [OpenShift must-gather](https://github.com/openshift/must-gather)
-that expands its capabilities to gather Poison Pill related information.
+that expands its capabilities to gather more related information to Medik8s operators.
 
 ### Usage
 ```sh
 oc adm must-gather --image=quay.io/medik8s/must-gather
 ```
 
-The command above will create a local directory with a dump of the poison pill state.
-Note that this command will only get data related to the poison pill part of the OpenShift cluster.
+The command above will create a local directory with a dump of the operator's state.
+Note that this command will only get data related to the operator's part of the OpenShift cluster.
 
 You will get a dump of:
 - the namespace to which NodeHealthCheck and Poison Pill Operators are deployed, including logs
