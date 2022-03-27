@@ -11,9 +11,18 @@ named_resources=()
 # Resource groups list, eg. pods
 group_resources=()
 
-# Medik8s ns
-MEDIK8S_NS=$(oc get subs -A --field-selector=metadata.name=node-healthcheck-operator -o jsonpath='{.items[*].metadata.namespace}')
-named_resources+=(ns/${MEDIK8S_NS})
+# NHC and PP namespaces
+NHC_NS=$(oc get subs -A --field-selector=metadata.name=node-healthcheck-operator -o jsonpath='{.items[*].metadata.namespace}')
+if [ -n "$NHC_NS" ]
+then
+  named_resources+=(ns/${NHC_NS})
+fi
+
+PP_NS=$(oc get subs -A --field-selector=metadata.name=poison-pill-manager -o jsonpath='{.items[*].metadata.namespace}')
+if [ -n "$PP_NS" ] && [ "${PP_NS}" != "${NHC_NS}" ]
+then
+  named_resources+=(ns/${PP_NS})
+fi
 
 # Medik8s pods
 # Gathering pod/podname does not collect logs, that is only done for namespaces. So no need to gather pods explicitly.
