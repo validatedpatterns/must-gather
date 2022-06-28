@@ -11,17 +11,17 @@ named_resources=()
 # Resource groups list, eg. pods
 group_resources=()
 
-# NHC and PP namespaces
+# NHC and SNR namespaces
 NHC_NS=$(oc get subs -A --field-selector=metadata.name=node-healthcheck-operator -o jsonpath='{.items[*].metadata.namespace}')
 if [ -n "$NHC_NS" ]
 then
   named_resources+=(ns/${NHC_NS})
 fi
 
-PP_NS=$(oc get subs -A --field-selector=metadata.name=poison-pill-manager -o jsonpath='{.items[*].metadata.namespace}')
-if [ -n "$PP_NS" ] && [ "${PP_NS}" != "${NHC_NS}" ]
+SNR_NS=$(oc get subs -A --field-selector=metadata.name=self-node-remediation -o jsonpath='{.items[*].metadata.namespace}')
+if [ -n "$SNR_NS" ] && [ "${SNR_NS}" != "${NHC_NS}" ]
 then
-  named_resources+=(ns/${PP_NS})
+  named_resources+=(ns/${SNR_NS})
 fi
 
 # Medik8s pods

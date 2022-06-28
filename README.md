@@ -13,8 +13,8 @@ The command above will create a local directory with a dump of the operator's st
 Note that this command will only get data related to the operator's part of the OpenShift cluster.
 
 You will get a dump of:
-- the namespace to which NodeHealthCheck and Poison Pill Operators are deployed, including logs
-- NHC and PP related CRs
+- the namespace to which NodeHealthCheck and Self Node Remediation Operators are deployed, including logs
+- NHC and SNR related CRs
 - Nodes
 
 In order to get data about other parts of the cluster (not specific to medik8s) you should
