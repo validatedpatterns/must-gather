@@ -1,7 +1,7 @@
 FROM quay.io/openshift/origin-must-gather:4.10 as builder
 
-FROM quay.io/centos/centos:stream8
-RUN dnf install rsync -y
+FROM registry.access.redhat.com/ubi8/ubi-minimal
+RUN microdnf install tar rsync
 
 COPY --from=builder /usr/bin/oc /usr/bin/oc
 
