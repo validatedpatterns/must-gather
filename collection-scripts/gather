@@ -12,13 +12,13 @@ named_resources=()
 group_resources=()
 
 # NHC and SNR namespaces
-NHC_NS=$(oc get subs -A --field-selector=metadata.name=node-healthcheck-operator -o jsonpath='{.items[*].metadata.namespace}')
+NHC_NS=$(oc get subscriptions.operators.coreos.com -A -o=json | jq --raw-output '.items[] | select(.spec.name | contains("node-healthcheck")) | .metadata.namespace')
 if [ -n "$NHC_NS" ]
 then
   named_resources+=(ns/${NHC_NS})
 fi
 
-SNR_NS=$(oc get subs -A --field-selector=metadata.name=self-node-remediation -o jsonpath='{.items[*].metadata.namespace}')
+SNR_NS=$(oc get subscriptions.operators.coreos.com -A -o=json | jq --raw-output '.items[] | select(.spec.name | contains("self-node-remediation")) | .metadata.namespace')
 if [ -n "$SNR_NS" ] && [ "${SNR_NS}" != "${NHC_NS}" ]
 then
   named_resources+=(ns/${SNR_NS})
