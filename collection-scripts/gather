@@ -2,8 +2,9 @@
 
 # generate /must-gather/version file
 . version
-echo "medik8s/must-gather" > /must-gather/version
-version >> /must-gather/version
+echo "medik8s/must-gather" > /must-gather/version # imageName - Source repo identifier
+version >> /must-gather/version # imageVersion  - Build version
+imageId >> /must-gather/version # imageID  -  repository@digest          
 
 # Named resource list, eg. ns/openshift-config
 named_resources=()

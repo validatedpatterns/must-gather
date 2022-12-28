@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 function version() {
-  # get version from image (major.minor.micro, e.g. 4.11.0)
-  version=$( \
+  # get version from image (major.minor.micro, e.g. v4.11.0)
+  version=v$( \
     oc status | grep '^pod' | \
     sed -n -r -e 's/.*(([[:digit:]])+\.([[:digit:]])+\.([[:digit:]])+).*/\1/p' \
   )
@@ -12,4 +12,14 @@ function version() {
   # if version still not found, use Unknown
   [ -z "${version}" ] && version="Unknown"
   echo ${version}
+}
+
+function imageId() {
+   # get imageId (e.g. repository@digest )
+  imageId=$(oc status | grep '^pod' | sed -r -e 's/^pod.*runs //' | awk '{print $2}')
+
+  # if imageId is not found, use Unknown
+  [ -z "${imageId}" ] && imageId="Unknown"
+echo ${imageId}
+
 }
