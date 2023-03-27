@@ -10,12 +10,7 @@ imageId >> /must-gather/version # imageID  -  repository@digest
 # Since we cannot parse any values-*yaml file to determine which namespaces are of interest
 # we use some heurestics to do so
 # Named resource list, eg. ns/openshift-config
-named_resources=(
-        ns/openshift-gitops
-)
-
-# Resource groups list, eg. pods
-group_resources=()
+named_resources=()
 
 # Operators namespaces
 operators=(
@@ -26,6 +21,14 @@ for OP_NAME in "${operators[@]}"; do
     [[ -z $OP_NS ]] && continue
     if ! printf "%s\n" "${named_resources[@]}" | grep -xq "ns/$OP_NS"; then
         named_resources+=(ns/${OP_NS})
+    fi
+done
+
+# This gets us all namespace with an argo instance
+ARGOCD_NS=$(oc get argocd -A --no-headers=true -o custom-columns=NAME:.metadata.namespace)
+for NS in $ARGOCD_NS; do
+    if ! printf "%s\n" "${named_resources[@]}" | grep -xq "ns/$NS"; then
+        named_resources+=(ns/${NS})
     fi
 done
 
