@@ -18,6 +18,5 @@ function imageId() {
   # if image_id is not found, use Unknown
   [ -z "${imageId}" ] && imageId="Unknown-Image"
 
-echo ${imageId}
-
+  echo ${imageId}
 }
