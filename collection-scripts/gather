@@ -2,7 +2,7 @@
 
 # generate /must-gather/version file
 . version
-echo "medik8s/must-gather" > /must-gather/version # imageName - Source repo identifier
+echo "hybridcloudpatterns/must-gather" > /must-gather/version # imageName - Source repo identifier
 version >> /must-gather/version # imageVersion  - Build version
 imageId >> /must-gather/version # imageID  -  repository@digest          
 
@@ -31,8 +31,8 @@ done
 # Medik8s pods
 # Gathering pod/podname does not collect logs, that is only done for namespaces. So no need to gather pods explicitly.
 # Leaving it here in case things change...
-# MEDIK8S_PODS=$(oc -n ${MEDIK8S_NS} get pods -o jsonpath='{range .items[*]}{"pod/"}{.metadata.name}{"\n"}{end}' | grep 'node-healthcheck\|poison-pill' | sed -z 's/\n/ /g')
-# named_resources+=(${MEDIK8S_PODs})
+# VPATTERNS_PODS=$(oc -n ${VPATTERNS_NS} get pods -o jsonpath='{range .items[*]}{"pod/"}{.metadata.name}{"\n"}{end}' | grep 'node-healthcheck\|poison-pill' | sed -z 's/\n/ /g')
+# named_resources+=(${VPATTERNS_PODs})
 
 # Nodes
 group_resources+=(nodes)
@@ -41,12 +41,12 @@ group_resources+=(nodes)
 group_resources+=(machinehealthchecks)
 
 # Medik8s CRDs
-MEDIK8S_CRDS=$(oc get crds -o jsonpath='{range .items[*]}{"crd/"}{.metadata.name}{"\n"}{end}' | grep 'medik8s' | sed -z 's/\n/ /g')
-named_resources+=(${MEDIK8S_CRDS})
+VPATTERNS_CRDS=$(oc get crds -o jsonpath='{range .items[*]}{"crd/"}{.metadata.name}{"\n"}{end}' | grep 'hybridcloudpatterns' | sed -z 's/\n/ /g')
+named_resources+=(${VPATTERNS_CRDS})
 
 # Medik8s CRs
-MEDIK8S_CRS=$(oc get crds -o jsonpath='{range .items[*]}{.metadata.name}{"\n"}{end}' | grep 'medik8s' | sed -z 's/\n/ /g')
-group_resources+=(${MEDIK8S_CRS})
+VPATTERNS_CRS=$(oc get crds -o jsonpath='{range .items[*]}{.metadata.name}{"\n"}{end}' | grep 'hybridcloudpatterns' | sed -z 's/\n/ /g')
+group_resources+=(${VPATTERNS_CRS})
 
 # Run the Collection of Resources using inspect
 oc adm inspect --dest-dir must-gather --rotated-pod-logs --all-namespaces "${named_resources[@]}"

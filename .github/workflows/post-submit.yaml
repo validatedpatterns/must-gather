@@ -8,7 +8,7 @@ on:
 
 jobs:
   push_to_registry:
-    name: Build and push images to quay.io/medik8s
+    name: Build and push images to quay.io/hybridcloudpatterns
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout code

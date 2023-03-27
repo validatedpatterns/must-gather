@@ -2,12 +2,16 @@
 
 aliases:
   approvers:
-      - slintes
-      - mshitrit
       - beekhof
-      - razo7
+      - mbaldessari
+      - mhjacks
+      - claudiol
+      - ipbabble
+      - day0hero
   code-reviewers:
-      - slintes
-      - mshitrit
       - beekhof
-      - razo7
+      - mbaldessari
+      - mhjacks
+      - claudiol
+      - ipbabble
+      - day0hero

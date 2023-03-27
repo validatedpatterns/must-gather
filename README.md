@@ -1,30 +1,29 @@
-Medik8s must-gather
-=================
+Hybrid Cloud Patterns must-gather
+=================================
 
 `must-gather` is a tool built on top of [OpenShift must-gather](https://github.com/openshift/must-gather)
-that expands its capabilities to gather more related information to Medik8s operators.
+that expands its capabilities to gather more related information to Validated Patterns.
 
 ### Usage
 ```sh
-oc adm must-gather --image=quay.io/medik8s/must-gather
+# From the patterns git root folder
+oc adm must-gather --image=quay.io/hybridcloudpatterns/must-gather
 ```
 
 The command above will create a local directory with a dump of the operator's state.
-Note that this command will only get data related to the operator's part of the OpenShift cluster.
 
 You will get a dump of:
-- the namespace to which NodeHealthCheck and Self Node Remediation Operators are deployed, including logs
-- NHC and SNR related CRs
-- Nodes
+- The namespaces used by the patterns in their values-* files
+- The pod logs running in the namespaces running an argocd instance
 
-In order to get data about other parts of the cluster (not specific to medik8s) you should
+In order to get data about other parts of the cluster (not specific to hybridcloudpatterns) you should
 run `oc adm must-gather` (without passing a custom image). Run `oc adm must-gather -h` to see more options.
 
 ### Development
 You can build the image locally using the Dockerfile included.
 
 A `makefile` is also provided. Override `IMAGE_REGISTRY`, `IMAGE_NAME` and/or `IMAGE_TAG` to your needs. Default is
-`quay.io/medik8s/must-gather:latest`.
+`quay.io/hybridcloudpatterns/must-gather:latest`.
 
 The targets for `make` are as follows:
 - `build`: builds the image with the supplied name and pushes it

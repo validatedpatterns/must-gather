@@ -1,4 +1,4 @@
-IMAGE_REGISTRY ?= quay.io/medik8s
+IMAGE_REGISTRY ?= quay.io/hybridcloudpatterns
 IMAGE_NAME ?= must-gather
 IMAGE_TAG ?= latest
 
