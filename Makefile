@@ -25,3 +25,15 @@ docker-build: ## build container
 docker-push: ## push container
 	docker push ${IMAGE}
 
+.PHONY: super-linter
+super-linter: ## Runs super linter locally
+	rm -rf .mypy_cache
+	podman run -e RUN_LOCAL=true -e USE_FIND_ALGORITHM=true	\
+					-e VALIDATE_ANSIBLE=false \
+					-e VALIDATE_JSCPD=false \
+					-e VALIDATE_KUBERNETES_KUBECONFORM=false \
+					-e VALIDATE_YAML=false \
+					$(DISABLE_LINTERS) \
+					-v $(PWD):/tmp/lint:rw,z \
+					-w /tmp/lint \
+					docker.io/github/super-linter:slim-v5
