@@ -1,0 +1,7 @@
+ignored:
+  # Always tag the version of an image explicitly
+  - DL3006
+  # Using latest is prone to errors if the image will ever update. Pin the version explicitly to a release tag
+  - DL3007
+  # Specify version with `dnf install -y <package>-<version>`.
+  - DL3041 

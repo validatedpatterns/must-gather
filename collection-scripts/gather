@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # generate /must-gather/version file
+# shellcheck disable=SC1091
 . version
 echo "hybridcloudpatterns/must-gather" > /must-gather/version # imageName - Source repo identifier
 version >> /must-gather/version # imageVersion  - Build version
@@ -20,7 +21,7 @@ for OP_NAME in "${operators[@]}"; do
     OP_NS=$(oc get subscriptions.operators.coreos.com -A -o=json | jq --raw-output ".items[] | select(.spec.name | contains(\"${OP_NAME}\")) | .metadata.namespace")
     [[ -z $OP_NS ]] && continue
     if ! printf "%s\n" "${named_resources[@]}" | grep -xq "ns/$OP_NS"; then
-        named_resources+=(ns/${OP_NS})
+        named_resources+=("ns/${OP_NS}")
     fi
 done
 
@@ -28,7 +29,7 @@ done
 ARGOCD_NS=$(oc get argocd -A --no-headers=true -o custom-columns=NAME:.metadata.namespace)
 for NS in $ARGOCD_NS; do
     if ! printf "%s\n" "${named_resources[@]}" | grep -xq "ns/$NS"; then
-        named_resources+=(ns/${NS})
+        named_resources+=("ns/${NS}")
     fi
 done
 
@@ -36,7 +37,7 @@ done
 GITOPS_NS=$(oc get projects -l argocd.argoproj.io/managed-by --no-headers=true -o custom-columns=NAME:.metadata.name)
 for NS in $GITOPS_NS; do
     if ! printf "%s\n" "${named_resources[@]}" | grep -xq "ns/$NS"; then
-        named_resources+=(ns/${NS})
+        named_resources+=("ns/${NS}")
     fi
 done
 

@@ -1,10 +1,10 @@
-Hybrid Cloud Patterns must-gather
-=================================
+# Hybrid Cloud Patterns must-gather
 
 `must-gather` is a tool built on top of [OpenShift must-gather](https://github.com/openshift/must-gather)
 that expands its capabilities to gather more related information to Validated Patterns.
 
-### Usage
+## Usage
+
 ```sh
 # From the patterns git root folder
 oc adm must-gather --image=quay.io/hybridcloudpatterns/must-gather
@@ -19,7 +19,8 @@ You will get a dump of:
 In order to get data about other parts of the cluster (not specific to hybridcloudpatterns) you should
 run `oc adm must-gather` (without passing a custom image). Run `oc adm must-gather -h` to see more options.
 
-### Development
+## Development
+
 You can build the image locally using the Dockerfile included.
 
 A `makefile` is also provided. Override `IMAGE_REGISTRY`, `IMAGE_NAME` and/or `IMAGE_TAG` to your needs. Default is
