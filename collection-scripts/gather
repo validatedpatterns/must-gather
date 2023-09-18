@@ -26,7 +26,7 @@ for OP_NAME in "${operators[@]}"; do
 done
 
 # This gets us all namespace with an argo instance
-ARGOCD_NS=$(oc get argocd -A --no-headers=true -o custom-columns=NAME:.metadata.namespace)
+ARGOCD_NS=$(oc get argocd.argoproj.io -A --no-headers=true -o custom-columns=NAME:.metadata.namespace)
 for NS in $ARGOCD_NS; do
     if ! printf "%s\n" "${named_resources[@]}" | grep -xq "ns/$NS"; then
         named_resources+=("ns/${NS}")
