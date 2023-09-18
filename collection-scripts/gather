@@ -44,4 +44,13 @@ done
 # Run the Collection of Resources using inspect
 oc adm inspect --dest-dir must-gather --rotated-pod-logs --all-namespaces "${named_resources[@]}"
 
+# Also collect the describe command of each argo cd instance
+for i in argocd.argoproj.io applications.argoproj.io; do
+    for j in $(oc get "${i}" -A --no-headers=true -o go-template='{{range .items}}{{ printf "%s/%s\n" .metadata.namespace .metadata.name}}{{end}}'); do
+        NS=$(echo "${j}" | cut -f1 -d/)
+        APP=$(echo "${j}" | cut -f2 -d/)
+        oc describe -n "${NS}" "${i}" "${APP}" > "/must-gather/${i}-${NS}-${APP}-describe.txt"
+    done
+done
+
 exit 0
