@@ -55,4 +55,12 @@ for i in argocd.argoproj.io applications.argoproj.io; do
     done
 done
 
+mkdir /must-gather/patterns
+for i in $(oc get patterns.gitops.hybrid-cloud-patterns.io -A --no-headers=true -o go-template='{{range .items}}{{ printf "%s/%s\n" .metadata.namespace .metadata.name}}{{end}}'); do
+    NS=$(echo "${i}" | cut -f1 -d/)
+    NAME=$(echo "${i}" | cut -f2 -d/)
+    oc get -n "${NS}" patterns "${NAME}" -o yaml > "/must-gather/patterns/pattern-${NS}-${NAME}.yaml"
+done
+
+
 exit 0
