@@ -45,6 +45,9 @@ done
 oc adm inspect --dest-dir must-gather --rotated-pod-logs --all-namespaces "${named_resources[@]}"
 
 mkdir /must-gather/argocd
+# Collect a recap of argoapps
+oc get applications.argoproj.io -A > /must-gather/argocd/argo-overview.txt
+
 # Also collect the describe and yaml command of each argo cd instance
 for i in argocd.argoproj.io applications.argoproj.io; do
     for j in $(oc get "${i}" -A --no-headers=true -o go-template='{{range .items}}{{ printf "%s/%s\n" .metadata.namespace .metadata.name}}{{end}}'); do
