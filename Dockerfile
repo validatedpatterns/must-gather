@@ -1,6 +1,6 @@
-FROM quay.io/openshift/origin-must-gather:4.14 as builder
+FROM quay.io/openshift/origin-must-gather:4.19 as builder
 
-FROM registry.access.redhat.com/ubi8/ubi-minimal
+FROM registry.access.redhat.com/ubi10/ubi-minimal
 RUN microdnf install -y tar rsync jq && microdnf upgrade -y \
   && microdnf clean all
 
