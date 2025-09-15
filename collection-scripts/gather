@@ -3,10 +3,9 @@
 # generate /must-gather/version file
 # shellcheck disable=SC1091
 . version
-echo "hybridcloudpatterns/must-gather" > /must-gather/version # imageName - Source repo identifier
-version >> /must-gather/version # imageVersion  - Build version
-imageId >> /must-gather/version # imageID  -  repository@digest          
-
+echo "validatedpatterns/must-gather" >/must-gather/version # imageName - Source repo identifier
+version >>/must-gather/version                             # imageVersion  - Build version
+imageId >>/must-gather/version                             # imageID  -  repository@digest
 
 # Since we cannot parse any values-*yaml file to determine which namespaces are of interest
 # we use some heurestics to do so
@@ -15,30 +14,30 @@ named_resources=()
 
 # Operators namespaces
 operators=(
-        patterns-operator
+	patterns-operator
 )
 for OP_NAME in "${operators[@]}"; do
-    OP_NS=$(oc get subscriptions.operators.coreos.com -A -o=json | jq --raw-output ".items[] | select(.spec.name | contains(\"${OP_NAME}\")) | .metadata.namespace")
-    [[ -z $OP_NS ]] && continue
-    if ! printf "%s\n" "${named_resources[@]}" | grep -xq "ns/$OP_NS"; then
-        named_resources+=("ns/${OP_NS}")
-    fi
+	OP_NS=$(oc get subscriptions.operators.coreos.com -A -o=json | jq --raw-output ".items[] | select(.spec.name | contains(\"${OP_NAME}\")) | .metadata.namespace")
+	[[ -z $OP_NS ]] && continue
+	if ! printf "%s\n" "${named_resources[@]}" | grep -xq "ns/$OP_NS"; then
+		named_resources+=("ns/${OP_NS}")
+	fi
 done
 
 # This gets us all namespace with an argo instance
 ARGOCD_NS=$(oc get argocd.argoproj.io -A --no-headers=true -o custom-columns=NAME:.metadata.namespace)
 for NS in $ARGOCD_NS; do
-    if ! printf "%s\n" "${named_resources[@]}" | grep -xq "ns/$NS"; then
-        named_resources+=("ns/${NS}")
-    fi
+	if ! printf "%s\n" "${named_resources[@]}" | grep -xq "ns/$NS"; then
+		named_resources+=("ns/${NS}")
+	fi
 done
 
 # Get all namespaces that have a label "argocd.argoproj.io/managed-by"
 GITOPS_NS=$(oc get projects -l argocd.argoproj.io/managed-by --no-headers=true -o custom-columns=NAME:.metadata.name)
 for NS in $GITOPS_NS; do
-    if ! printf "%s\n" "${named_resources[@]}" | grep -xq "ns/$NS"; then
-        named_resources+=("ns/${NS}")
-    fi
+	if ! printf "%s\n" "${named_resources[@]}" | grep -xq "ns/$NS"; then
+		named_resources+=("ns/${NS}")
+	fi
 done
 
 # Run the Collection of Resources using inspect
@@ -46,24 +45,23 @@ oc adm inspect --dest-dir must-gather --rotated-pod-logs --all-namespaces "${nam
 
 mkdir /must-gather/argocd
 # Collect a recap of argoapps
-oc get applications.argoproj.io -A > /must-gather/argocd/argo-overview.txt
+oc get applications.argoproj.io -A >/must-gather/argocd/argo-overview.txt
 
 # Also collect the describe and yaml command of each argo cd instance
 for i in argocd.argoproj.io applications.argoproj.io; do
-    for j in $(oc get "${i}" -A --no-headers=true -o go-template='{{range .items}}{{ printf "%s/%s\n" .metadata.namespace .metadata.name}}{{end}}'); do
-        NS=$(echo "${j}" | cut -f1 -d/)
-        APP=$(echo "${j}" | cut -f2 -d/)
-        oc describe -n "${NS}" "${i}" "${APP}" > "/must-gather/argocd/${i}-${NS}-${APP}-describe.txt"
-        oc get -n "${NS}" "${i}" "${APP}" -o yaml > "/must-gather/argocd/${i}-${NS}-${APP}.yaml"
-    done
+	for j in $(oc get "${i}" -A --no-headers=true -o go-template='{{range .items}}{{ printf "%s/%s\n" .metadata.namespace .metadata.name}}{{end}}'); do
+		NS=$(echo "${j}" | cut -f1 -d/)
+		APP=$(echo "${j}" | cut -f2 -d/)
+		oc describe -n "${NS}" "${i}" "${APP}" >"/must-gather/argocd/${i}-${NS}-${APP}-describe.txt"
+		oc get -n "${NS}" "${i}" "${APP}" -o yaml >"/must-gather/argocd/${i}-${NS}-${APP}.yaml"
+	done
 done
 
 mkdir /must-gather/patterns
 for i in $(oc get patterns.gitops.hybrid-cloud-patterns.io -A --no-headers=true -o go-template='{{range .items}}{{ printf "%s/%s\n" .metadata.namespace .metadata.name}}{{end}}'); do
-    NS=$(echo "${i}" | cut -f1 -d/)
-    NAME=$(echo "${i}" | cut -f2 -d/)
-    oc get -n "${NS}" patterns "${NAME}" -o yaml > "/must-gather/patterns/pattern-${NS}-${NAME}.yaml"
+	NS=$(echo "${i}" | cut -f1 -d/)
+	NAME=$(echo "${i}" | cut -f2 -d/)
+	oc get -n "${NS}" patterns "${NAME}" -o yaml >"/must-gather/patterns/pattern-${NS}-${NAME}.yaml"
 done
-
 
 exit 0
